@@ -1,24 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import CssBaseline from '@material-ui/core/CssBaseline'
+import NavBar from 'components/navigation/NavBar';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
+import SpaceWeatherDash from 'components/spaceweather/SpaceWeatherDash';
+import { makeStyles } from '@material-ui/styles';
+import Login from 'components/login/Login';
+import Register from 'components/login/Register';
+
+const useStyles = makeStyles({
+  app: {
+    
+  }
+})
 
 function App() {
+  const classes = useStyles();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={classes.app}>
+      <CssBaseline />
+      <Router>
+        <NavBar />
+        <Route path="/weather">
+          <SpaceWeatherDash />
+        </Route>
+        <Route path="/satellites">
+
+        </Route>
+        <Route path="/register">
+          <Register />
+        </Route>
+        <Route path="/login">
+          <Login />
+        </Route>
+        <Route path="/">
+          
+        </Route>
+      </Router>
     </div>
   );
 }
