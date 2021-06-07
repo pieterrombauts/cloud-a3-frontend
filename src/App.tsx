@@ -6,6 +6,7 @@ import SpaceWeatherDash from 'components/spaceweather/SpaceWeatherDash';
 import { makeStyles } from '@material-ui/styles';
 import Login from 'components/login/Login';
 import Register from 'components/login/Register';
+import SatelliteDash from 'components/satellites/SatelliteDash';
 
 const useStyles = makeStyles({
   app: {
@@ -24,7 +25,7 @@ function App() {
           <SpaceWeatherDash />
         </Route>
         <Route path="/satellites">
-
+          <SatelliteDash />
         </Route>
         <Route path="/register">
           <Register />
