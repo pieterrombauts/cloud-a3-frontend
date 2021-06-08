@@ -36,11 +36,12 @@ interface RegisterRequest {
 }
 
 export async function register(userData: RegisterRequest) {
-  const { data } = await axios.post<RegisterResponse>(
-    API_GATEWAY_URL + '/register',
-    userData,
+  await axios.post<RegisterResponse>(
+    CORS_ANYWHERE + '/' + API_GATEWAY_URL + '/register',
+    {
+      ...userData,
+    },
   )
-  return data
 }
 
 export async function me() {
