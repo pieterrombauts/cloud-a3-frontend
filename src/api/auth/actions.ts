@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { API_GATEWAY_URL } from './contants'
+import { API_GATEWAY_URL, CORS_ANYWHERE } from '../contants'
+import { persistAuthToken, withAuth } from './tokens'
 
 // LOGIN
 
@@ -8,11 +9,14 @@ interface LoginResponse {
 }
 
 export async function login(email: string, password: string) {
-  const { data } = await axios.post<LoginResponse>(API_GATEWAY_URL + '/login', {
-    email,
-    password,
-  })
-  return data
+  const { data } = await axios.post<LoginResponse>(
+    CORS_ANYWHERE + '/' + API_GATEWAY_URL + '/login',
+    {
+      email,
+      password,
+    },
+  )
+  persistAuthToken(data.token)
 }
 
 // REGISTER
@@ -37,4 +41,8 @@ export async function register(userData: RegisterRequest) {
     userData,
   )
   return data
+}
+
+export async function me() {
+  return await withAuth(axios).get(API_GATEWAY_URL + '/me')
 }
