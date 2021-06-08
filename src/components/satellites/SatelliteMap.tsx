@@ -9,12 +9,13 @@ import MapLoading from './MapLoading';
 
 const useStyles = makeStyles({
   container: {
-    height: "80vh"
-  },
+    height: "85vh",
+  }
 });
 
-interface LeafletMapCardProps {
+interface SatelliteMapProps {
   noradID: string;
+  visible: boolean;
 }
 
 interface PositionType {
@@ -36,8 +37,8 @@ interface PointType {
 
 const defaultProps = {
   center: {
-    lat: -37.81,
-    lng: 144.96
+    lat: 0,
+    lng: 0
   },
   zoom: 2,
   style: {
@@ -46,7 +47,7 @@ const defaultProps = {
   }
 }
 
-const LeafletMapCard: React.FC<LeafletMapCardProps> = (props) => {
+const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
   const classes = useStyles();
   const [points, setPoints] = useState<PointType[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -65,18 +66,8 @@ const LeafletMapCard: React.FC<LeafletMapCardProps> = (props) => {
     }
   }, [props.noradID])
 
-  const onLoad = (map: any) => {
-    // map.fitBounds({east: -180, north: 90, south: -90, west: 180});
-  }
-
   return (
-    <div className={classes.container}>
-      {/* <GoogleMapReact
-        bootstrapURLKeys={{ key: "AIzaSyApWZaXIJNGfx2KfL_kve1zt0ZrQRvZx34" }}
-        defaultCenter={defaultProps.center}
-        defaultZoom={defaultProps.zoom}
-      >
-      </GoogleMapReact> */}
+    <div className={classes.container} style={{display: props.visible ? "block" : "none"}}>
       <LoadScript
         googleMapsApiKey="AIzaSyApWZaXIJNGfx2KfL_kve1zt0ZrQRvZx34"
       >
@@ -84,7 +75,6 @@ const LeafletMapCard: React.FC<LeafletMapCardProps> = (props) => {
           mapContainerStyle={defaultProps.style}
           center={defaultProps.center}
           zoom={defaultProps.zoom}
-          onLoad={onLoad}
           onBoundsChanged={() => console.log("Bounds changed")}
         >
           {loading && 
@@ -104,4 +94,4 @@ const LeafletMapCard: React.FC<LeafletMapCardProps> = (props) => {
   );
 }
 
-export default LeafletMapCard;
+export default SatelliteMap;

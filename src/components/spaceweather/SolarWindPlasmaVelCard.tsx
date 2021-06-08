@@ -61,7 +61,7 @@ const options: ChartOptions = {
     y: {
       type: "linear",
       min: 300,
-      max: 400,
+      max: 600,
       title: {
         display: true,
         text: "Velocity (km/s)",
