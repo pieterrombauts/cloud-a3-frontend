@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import { Link, useHistory } from 'react-router-dom'
 import { CircularProgress, makeStyles } from '@material-ui/core'
 import { useQuery } from 'react-query'
-import { login } from 'api/auth/actions'
+import { forgotPassword, login } from 'api/auth/actions'
 import { Alert } from '@material-ui/lab'
 import { Field, Form, Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
@@ -42,13 +42,12 @@ const useStyles = makeStyles({
   },
 })
 
-const loginSchema = Yup.object().shape({
+const forgotPasswordSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
-  password: Yup.string().required('Required'),
 })
-interface LoginForm {
+
+interface ForgotPasswordForm {
   email: string
-  password: string
 }
 
 const Login: React.FC<LoginProps> = (props) => {
@@ -56,7 +55,7 @@ const Login: React.FC<LoginProps> = (props) => {
   const [error, setError] = useState('')
   const history = useHistory()
 
-  const initialValues: LoginForm = { email: '', password: '' }
+  const initialValues: ForgotPasswordForm = { email: '' }
   return (
     <Container component="main" maxWidth="sm">
       <Paper className={classes.paper} elevation={0}>
@@ -64,24 +63,23 @@ const Login: React.FC<LoginProps> = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Forgot Password
         </Typography>
 
         <Formik
           initialValues={initialValues}
-          validationSchema={loginSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            login(values.email.trim().toLowerCase(), values.password)
-              .then(() => {
-                setError('')
-                history.push('/')
-              })
-              .catch((error) => {
-                if (error.response) {
-                  setError(error.response.data.message)
-                }
-              })
-              .finally(() => setSubmitting(false))
+          validationSchema={forgotPasswordSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              await forgotPassword(values.email.trim().toLowerCase())
+              setError('')
+            } catch (error) {
+              if (error.response) {
+                setError(error.response.data.message)
+              }
+            } finally {
+              setSubmitting(false)
+            }
           }}
         >
           {({ isSubmitting }) => (
@@ -101,20 +99,6 @@ const Login: React.FC<LoginProps> = (props) => {
                 fullWidth
                 component={TextField}
               />
-              <Field
-                type="password"
-                name="password"
-                label="Password"
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                component={TextField}
-              />
-
-              <Typography variant="subtitle1">
-                <Link to="/forgot-password">Forgot password</Link>
-              </Typography>
               <Button
                 type="submit"
                 disabled={isSubmitting}
@@ -123,10 +107,14 @@ const Login: React.FC<LoginProps> = (props) => {
                 color="primary"
                 className={classes.submit}
               >
-                {isSubmitting ? <CircularProgress size={24} /> : 'login'}
+                {isSubmitting ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  'Send recovery email'
+                )}
               </Button>
               <Typography variant="subtitle1">
-                <Link to="/register">Don't have an account? Sign up</Link>
+                I remember now! <Link to="/login">Log in</Link>
               </Typography>
             </Form>
           )}
