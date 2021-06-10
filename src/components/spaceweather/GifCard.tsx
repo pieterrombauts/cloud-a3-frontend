@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Card from '@material-ui/core/Card'
+import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { AnimationBuilder } from 'util/AnimationBuilder';
 
@@ -13,24 +13,27 @@ interface GifCardProps {
 const GifCard: React.FC<GifCardProps> = (props) => {
   const [builder, setBuilder] = useState<AnimationBuilder | null>(null);
   useEffect(() => {
-    setBuilder(new AnimationBuilder(props.url, props.id, props.width, props.height));
+    setBuilder(
+      new AnimationBuilder(props.url, props.id, props.width, props.height),
+    );
     return () => {
+      console.log("I ran");
       builder?.pause();
       setBuilder(null);
-    }
-  },[])
+    };
+  }, []);
   useEffect(() => {
     if (builder !== null) {
       builder.resize(props.width, props.height);
       builder.populateImages();
     }
-  }, [props.width, props.height, builder])
+  }, [props.width, props.height, builder]);
 
   return (
     <Card>
       <canvas width={props.width} height={props.height} id={props.id}></canvas>
     </Card>
   );
-}
+};
 
 export default GifCard;

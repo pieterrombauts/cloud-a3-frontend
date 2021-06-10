@@ -12,12 +12,13 @@ import GOESElectronFluxCard from 'components/spaceweather/GOESElectronFluxCard';
 import GifCard from 'components/spaceweather/GifCard';
 import { makeStyles } from '@material-ui/styles';
 import AlertCard from './AlertCard';
+import { NOAA_BASE_URL } from 'api/contants';
 
 const useStyles = makeStyles({
   container: {
-    padding: "20px 20px 0px 20px",
-  }
-})
+    padding: '20px 20px 0px 20px',
+  },
+});
 
 interface SpaceWeatherDashProps {}
 
@@ -53,7 +54,7 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
         <Grid item xs={2}>
           <GifCard
             id="LASCO-C2"
-            url="https://services.swpc.noaa.gov/products/animations/lasco-c2.json"
+            url={`${NOAA_BASE_URL}/products/animations/lasco-c2.json`}
             width={300}
             height={300}
           />
@@ -61,7 +62,7 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
         <Grid item xs={2}>
           <GifCard
             id="LASCO-C3"
-            url="https://services.swpc.noaa.gov/products/animations/lasco-c3.json"
+            url={`${NOAA_BASE_URL}/products/animations/lasco-c3.json`}
             width={300}
             height={300}
           />
@@ -69,7 +70,7 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
         <Grid item xs={2}>
           <GifCard
             id="SUVI-171"
-            url="https://services.swpc.noaa.gov/products/animations/suvi-primary-171.json"
+            url={`${NOAA_BASE_URL}/products/animations/suvi-primary-171.json`}
             width={300}
             height={300}
           />
@@ -77,7 +78,7 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
         <Grid item xs={2}>
           <GifCard
             id="SDO-HMII"
-            url="https://services.swpc.noaa.gov/products/animations/sdo-hmii.json"
+            url={`${NOAA_BASE_URL}/products/animations/sdo-hmii.json`}
             width={300}
             height={300}
           />
@@ -85,7 +86,7 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
         <Grid item xs={2}>
           <GifCard
             id="OVATION-N"
-            url="https://services.swpc.noaa.gov/products/animations/ovation_north_24h.json"
+            url={`${NOAA_BASE_URL}/products/animations/ovation_north_24h.json`}
             width={300}
             height={300}
           />
@@ -96,6 +97,6 @@ const SpaceWeatherDash: React.FC<SpaceWeatherDashProps> = (props) => {
       </Grid>
     </Box>
   );
-}
+};
 
 export default SpaceWeatherDash;

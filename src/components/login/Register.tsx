@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Container from '@material-ui/core/Container'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import Grid from '@material-ui/core/Grid'
-import { Link, useHistory } from 'react-router-dom'
-import { CircularProgress, emphasize, makeStyles } from '@material-ui/core'
-import { Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import { login, register } from 'api/auth/actions'
-import { TextField } from 'formik-material-ui'
-import { Alert } from '@material-ui/lab'
+import React, { useEffect, useState } from 'react';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Container from '@material-ui/core/Container';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import { Link, useHistory } from 'react-router-dom';
+import { CircularProgress, emphasize, makeStyles } from '@material-ui/core';
+import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { login, register } from 'api/auth/actions';
+import { TextField } from 'formik-material-ui';
+import { Alert } from '@material-ui/lab';
+import { Paths } from 'Paths';
 
 interface RegisterProps {}
 
@@ -37,7 +38,7 @@ const useStyles = makeStyles({
     marginTop: '10px',
     marginBottom: '10px',
   },
-})
+});
 
 const registerSchema = Yup.object().shape({
   firstName: Yup.string().min(2, 'Too short').required('Required'),
@@ -46,26 +47,26 @@ const registerSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, 'Password must be at least than 8 characters')
     .required('Required'),
-})
+});
 
 interface RegisterForm {
-  firstName: string
-  lastName: string
-  email: string
-  password: string
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
 }
 
 const Register: React.FC<RegisterProps> = (props) => {
-  const classes = useStyles()
-  const history = useHistory()
-  const [error, setError] = useState('')
+  const classes = useStyles();
+  const history = useHistory();
+  const [error, setError] = useState('');
 
   const initialValues: RegisterForm = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
-  }
+  };
 
   return (
     <Container component="main" maxWidth="sm">
@@ -80,22 +81,22 @@ const Register: React.FC<RegisterProps> = (props) => {
           initialValues={initialValues}
           validationSchema={registerSchema}
           onSubmit={async (values, { setSubmitting }) => {
-            console.log('I got called')
+            console.log('I got called');
             try {
-              const email = values.email.trim().toLocaleLowerCase()
+              const email = values.email.trim().toLocaleLowerCase();
               await register({
                 ...values,
                 email: email,
                 firstName: values.firstName.trim(),
                 lastName: values.lastName.trim(),
-              })
-              await login(email, values.password)
-              setError('')
-              history.push('/')
+              });
+              await login(email, values.password);
+              setError('');
+              history.push(Paths.HOME);
             } catch (error) {
-              setError(error.response.data.message)
+              setError(error.response.data.message);
             } finally {
-              setSubmitting(false)
+              setSubmitting(false);
             }
           }}
         >
@@ -126,7 +127,7 @@ const Register: React.FC<RegisterProps> = (props) => {
                     required
                     fullWidth
                     label="Last Name"
-                    name="lastNa me"
+                    name="lastName"
                     component={TextField}
                   />
                 </Grid>
@@ -169,7 +170,7 @@ const Register: React.FC<RegisterProps> = (props) => {
         </Formik>
       </Paper>
     </Container>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

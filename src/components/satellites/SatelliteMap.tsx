@@ -1,44 +1,44 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import GoogleMapReact from 'google-map-react'
+import React, { useCallback, useEffect, useState } from 'react';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import GoogleMapReact from 'google-map-react';
 import {
   GoogleMap,
   LoadScript,
   OverlayView,
   Polyline,
-} from '@react-google-maps/api'
-import { makeStyles } from '@material-ui/core/styles'
-import axios from 'axios'
-import MapLoading from './MapLoading'
-import { CORS_ANYWHERE } from 'api/contants'
+} from '@react-google-maps/api';
+import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
+import MapLoading from './MapLoading';
+import { CORS_ANYWHERE } from 'api/contants';
 
 const useStyles = makeStyles({
   container: {
     height: '85vh',
   },
-})
+});
 
 interface SatelliteMapProps {
-  noradID: string
-  visible: boolean
+  noradID: string;
+  visible: boolean;
 }
 
 interface PositionType {
-  satlatitude: number
-  satlongitude: number
-  sataltitude: number
-  azimuth: number
-  elevation: number
-  ra: number
-  dec: number
-  timestamp: number
-  eclipsed: boolean
+  satlatitude: number;
+  satlongitude: number;
+  sataltitude: number;
+  azimuth: number;
+  elevation: number;
+  ra: number;
+  dec: number;
+  timestamp: number;
+  eclipsed: boolean;
 }
 
 interface PointType {
-  lat: number
-  lng: number
+  lat: number;
+  lng: number;
 }
 
 const defaultProps = {
@@ -51,16 +51,16 @@ const defaultProps = {
     width: '100%',
     height: '100%',
   },
-}
+};
 
 const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
-  const classes = useStyles()
-  const [points, setPoints] = useState<PointType[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
+  const classes = useStyles();
+  const [points, setPoints] = useState<PointType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (props.noradID !== '') {
-      setLoading(true)
+      setLoading(true);
       axios
         .get(
           `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/positions/${props.noradID}/41.702/-76.014/0/12000/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
@@ -69,12 +69,12 @@ const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
           let points = response.data.positions.map((point: PositionType) => ({
             lat: point.satlatitude,
             lng: point.satlongitude,
-          }))
-          setLoading(false)
-          setPoints(points)
-        })
+          }));
+          setLoading(false);
+          setPoints(points);
+        });
     }
-  }, [props.noradID])
+  }, [props.noradID]);
 
   return (
     <div
@@ -100,7 +100,7 @@ const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
         </GoogleMap>
       </LoadScript>
     </div>
-  )
-}
+  );
+};
 
-export default SatelliteMap
+export default SatelliteMap;
