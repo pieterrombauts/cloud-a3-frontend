@@ -8,6 +8,10 @@ export function getAuthToken() {
   return localStorage.getItem('authToken')
 }
 
+export function isLoggedIn() {
+  return !!getAuthToken()
+}
+
 export function withAuth(axios: AxiosInstance) {
   axios.interceptors.request.use((config) => {
     const token = getAuthToken()

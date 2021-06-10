@@ -13,6 +13,7 @@ import * as Yup from 'yup'
 import { login, register } from 'api/auth/actions'
 import { TextField } from 'formik-material-ui'
 import { Alert } from '@material-ui/lab'
+import { Paths } from 'Paths'
 
 interface RegisterProps {}
 
@@ -91,7 +92,7 @@ const Register: React.FC<RegisterProps> = (props) => {
               })
               await login(email, values.password)
               setError('')
-              history.push('/')
+              history.push(Paths.HOME)
             } catch (error) {
               setError(error.response.data.message)
             } finally {
@@ -126,7 +127,7 @@ const Register: React.FC<RegisterProps> = (props) => {
                     required
                     fullWidth
                     label="Last Name"
-                    name="lastNa me"
+                    name="lastName"
                     component={TextField}
                   />
                 </Grid>
