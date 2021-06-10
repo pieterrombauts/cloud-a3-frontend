@@ -1,50 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
+import React, { useEffect, useState } from 'react';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import Autocomplete, {
   AutocompleteChangeReason,
   AutocompleteInputChangeReason,
-} from '@material-ui/lab/Autocomplete'
-import TextField from '@material-ui/core/TextField'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Search from '@material-ui/icons/Search'
-import axios from 'axios'
-import { throttle, debounce } from 'throttle-debounce'
-import { Favorite } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/core/styles'
-import { CORS_ANYWHERE } from 'api/contants'
+} from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Search from '@material-ui/icons/Search';
+import axios from 'axios';
+import { throttle, debounce } from 'throttle-debounce';
+import { Favorite } from '@material-ui/icons';
+import { makeStyles } from '@material-ui/core/styles';
+import { CORS_ANYWHERE } from 'api/contants';
 
 const useStyles = makeStyles({
   icon: {
     color: 'rgba(0,0,0,0.3)',
     marginRight: '5px',
   },
-})
+});
 
 interface SatResultType {
-  OBJECT_NAME: string
-  OBJECT_ID: string
-  EPOCH: string
-  MEAN_MOTION: number
-  ECCENTRICITY: number
-  INCLINATION: number
-  RA_OF_ASC_NODE: number
-  ARG_OF_PERICENTER: number
-  MEAN_ANOMALY: number
-  EPHEMERIS_TYPE: number
-  CLASSIFICATION_TYPE: string
-  NORAD_CAT_ID: number
-  ELEMENT_SET_NO: number
-  REV_AT_EPOCH: number
-  BSTAR: number
-  MEAN_MOTION_DOT: number
-  MEAN_MOTION_DDOT: number
+  OBJECT_NAME: string;
+  OBJECT_ID: string;
+  EPOCH: string;
+  MEAN_MOTION: number;
+  ECCENTRICITY: number;
+  INCLINATION: number;
+  RA_OF_ASC_NODE: number;
+  ARG_OF_PERICENTER: number;
+  MEAN_ANOMALY: number;
+  EPHEMERIS_TYPE: number;
+  CLASSIFICATION_TYPE: string;
+  NORAD_CAT_ID: number;
+  ELEMENT_SET_NO: number;
+  REV_AT_EPOCH: number;
+  BSTAR: number;
+  MEAN_MOTION_DOT: number;
+  MEAN_MOTION_DDOT: number;
 }
 
 interface SatOptionType {
-  favourite: boolean
-  noradID: string
-  name: string
+  favourite: boolean;
+  noradID: string;
+  name: string;
 }
 
 interface SatSearchBarProps {
@@ -52,11 +52,11 @@ interface SatSearchBarProps {
 }
 
 const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
-  const classes = useStyles()
-  const [userFavs, setUserFavs] = useState<SatOptionType[]>([])
-  const [inputText, setInputText] = useState<string>('')
-  const [loading, setLoading] = useState<boolean>(false)
-  const [options, setOptions] = useState<SatOptionType[]>([])
+  const classes = useStyles();
+  const [userFavs, setUserFavs] = useState<SatOptionType[]>([]);
+  const [inputText, setInputText] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [options, setOptions] = useState<SatOptionType[]>([]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -69,14 +69,14 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
         favourite: true,
         name: el.name,
         noradID: el.noradID,
-      }))
-      setUserFavs(userFavOptions)
-      setOptions(userFavOptions)
-    }, 1000)
-  }, [])
+      }));
+      setUserFavs(userFavOptions);
+      setOptions(userFavOptions);
+    }, 1000);
+  }, []);
 
   const throttleFunc = throttle(2000, async (value: string) => {
-    setLoading(true)
+    setLoading(true);
     axios
       .get(
         `${CORS_ANYWHERE}/https://celestrak.com/NORAD/elements/gp.php?NAME=${value}&FORMAT=JSON`,
@@ -87,7 +87,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
             userFavs.find(
               (el) => el.noradID === result.NORAD_CAT_ID.toString(),
             ),
-          )
+          );
           return {
             favourite:
               userFavs.find(
@@ -97,12 +97,12 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
                 : true,
             noradID: result.NORAD_CAT_ID.toString(),
             name: result.OBJECT_NAME,
-          }
-        })
-        setOptions(options)
-        setLoading(false)
-      })
-  })
+          };
+        });
+        setOptions(options);
+        setLoading(false);
+      });
+  });
 
   const handleInputChange = async (
     event: React.ChangeEvent<{}>,
@@ -110,14 +110,14 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
     reason: AutocompleteInputChangeReason,
   ) => {
     // Open the dropdown if three or more characters have been typed
-    setInputText(value)
+    setInputText(value);
     if (reason === 'input' && value.length >= 3) {
-      throttleFunc(value)
+      throttleFunc(value);
     }
     if (reason === 'clear' || value.length === 0) {
-      setOptions(userFavs)
+      setOptions(userFavs);
     }
-  }
+  };
 
   const handleSelectChange = (
     event: React.ChangeEvent<{}>,
@@ -125,11 +125,11 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
     reason: AutocompleteChangeReason,
   ) => {
     if (value === null) {
-      props.onSelect({favourite: false, name: "", noradID: ""});
+      props.onSelect({ favourite: false, name: '', noradID: '' });
     } else {
-      props.onSelect(value)
+      props.onSelect(value);
     }
-  }
+  };
 
   return (
     <Card>
@@ -147,7 +147,9 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
           loading={loading}
           renderOption={(option) => (
             <>
-              {option.favourite && <Favorite fontSize="inherit" className={classes.icon}/>}
+              {option.favourite && (
+                <Favorite fontSize="inherit" className={classes.icon} />
+              )}
               {`${option.name} [${option.noradID}]`}
             </>
           )}
@@ -172,7 +174,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
         />
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default SatSearchBar
+export default SatSearchBar;

@@ -1,18 +1,18 @@
-import React, { useState } from 'react'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Container from '@material-ui/core/Container'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import { Link, useHistory, useLocation } from 'react-router-dom'
-import { CircularProgress, makeStyles } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
-import { Field, Form, Formik } from 'formik'
-import * as Yup from 'yup'
-import { TextField } from 'formik-material-ui'
-import { resetPassword } from 'api/auth/actions'
-import { Paths } from 'Paths'
+import React, { useState } from 'react';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Container from '@material-ui/core/Container';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import { CircularProgress, makeStyles } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+import { TextField } from 'formik-material-ui';
+import { resetPassword } from 'api/auth/actions';
+import { Paths } from 'Paths';
 
 interface LoginProps {}
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
     marginBottom: '10px',
     padding: 10,
   },
-})
+});
 
 const forgotPasswordSchema = Yup.object().shape({
   newPassword: Yup.string()
@@ -47,30 +47,30 @@ const forgotPasswordSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
     .required('Required'),
-})
+});
 
 interface ResetPasswordForm {
-  newPassword: string
-  confirmPassword: string
+  newPassword: string;
+  confirmPassword: string;
 }
 
 const ResetPassword: React.FC<LoginProps> = (props) => {
-  const classes = useStyles()
-  const [error, setError] = useState('')
-  const history = useHistory()
+  const classes = useStyles();
+  const [error, setError] = useState('');
+  const history = useHistory();
 
-  const search = useLocation().search
-  const token = new URLSearchParams(search).get('token')
+  const search = useLocation().search;
+  const token = new URLSearchParams(search).get('token');
 
   if (!token) {
-    history.push(Paths.FORGOT_PASSWORD)
-    return <p>No token, redirecting to forgot password page...</p>
+    history.push(Paths.FORGOT_PASSWORD);
+    return <p>No token, redirecting to forgot password page...</p>;
   }
 
   const initialValues: ResetPasswordForm = {
     newPassword: '',
     confirmPassword: '',
-  }
+  };
 
   return (
     <Container component="main" maxWidth="sm">
@@ -86,15 +86,15 @@ const ResetPassword: React.FC<LoginProps> = (props) => {
           validationSchema={forgotPasswordSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              await resetPassword(token, values.newPassword)
-              setError('')
-              history.push(Paths.HOME)
+              await resetPassword(token, values.newPassword);
+              setError('');
+              history.push(Paths.HOME);
             } catch (error) {
               if (error.response) {
-                setError(error.response.data.message)
+                setError(error.response.data.message);
               }
             } finally {
-              setSubmitting(false)
+              setSubmitting(false);
             }
           }}
         >
@@ -147,7 +147,7 @@ const ResetPassword: React.FC<LoginProps> = (props) => {
         </Formik>
       </Paper>
     </Container>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;

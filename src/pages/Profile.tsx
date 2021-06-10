@@ -1,10 +1,10 @@
-import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
-import { me } from 'api/auth/queries'
-import { User } from 'api/auth/queries'
-import React from 'react'
-import { useQuery } from 'react-query'
-import { useHistory } from 'react-router-dom'
+import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
+import { me } from 'api/auth/queries';
+import { User } from 'api/auth/queries';
+import React from 'react';
+import { useQuery } from 'react-query';
+import { useHistory } from 'react-router-dom';
 
 interface LoginProps {}
 
@@ -30,19 +30,19 @@ const useStyles = makeStyles({
     marginBottom: '10px',
     padding: 10,
   },
-})
+});
 
 const Profile: React.FC<LoginProps> = (props) => {
-  const classes = useStyles()
-  const history = useHistory()
+  const classes = useStyles();
+  const history = useHistory();
 
-  const { data, error, isLoading } = useQuery<User>('me', me)
+  const { data, error, isLoading } = useQuery<User>('me', me);
   if (isLoading) {
-    return <div>Loading</div>
+    return <div>Loading</div>;
   }
 
   if (!data || error) {
-    return <div>An error occurred</div>
+    return <div>An error occurred</div>;
   }
 
   return (
@@ -72,7 +72,7 @@ const Profile: React.FC<LoginProps> = (props) => {
         </Grid>
       </Grid>
     </Container>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

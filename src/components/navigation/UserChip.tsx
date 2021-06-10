@@ -1,10 +1,11 @@
-import { Avatar, Button, Chip, makeStyles } from '@material-ui/core'
-import { me } from 'api/auth/queries'
-import { isLoggedIn } from 'api/auth/tokens'
-import { Paths } from 'Paths'
-import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import { Link as RouterLink } from 'react-router-dom'
+import { Avatar, Button, Chip, makeStyles } from '@material-ui/core';
+import { me } from 'api/auth/queries';
+import { isLoggedIn } from 'api/auth/tokens';
+import { useLoginContext } from 'components/login/UserContext';
+import { Paths } from 'Paths';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface UserChipProps {}
 
@@ -28,18 +29,19 @@ const useStyles = makeStyles({
     color: 'white',
   },
   avatar: {},
-})
+});
 
 export const UserChip: React.FC<UserChipProps> = ({}) => {
   // isLoggedIn()
-  const classes = useStyles()
+  const classes = useStyles();
+  const { loggedIn } = useLoginContext();
   const {
     data: user,
     isLoading,
     error,
-  } = useQuery('me', me, { enabled: isLoggedIn() })
+  } = useQuery('me', me, { enabled: loggedIn });
 
-  if (isLoading || !user || error) {
+  if (!loggedIn || isLoading || !user || error) {
     return (
       <Button
         variant="contained"
@@ -51,7 +53,7 @@ export const UserChip: React.FC<UserChipProps> = ({}) => {
       >
         Login
       </Button>
-    )
+    );
   }
   return (
     <>
@@ -72,5 +74,5 @@ export const UserChip: React.FC<UserChipProps> = ({}) => {
         Log out
       </Button>
     </>
-  )
-}
+  );
+};

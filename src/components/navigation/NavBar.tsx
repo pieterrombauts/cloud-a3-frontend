@@ -1,13 +1,13 @@
-import { Avatar, Button, Chip } from '@material-ui/core'
-import AppBar from '@material-ui/core/AppBar'
-import { makeStyles } from '@material-ui/core/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import { Face } from '@material-ui/icons'
-import { me } from 'api/auth/queries'
-import React, { useState } from 'react'
-import { useQuery } from 'react-query'
-import { UserChip } from './UserChip'
+import { Avatar, Button, Chip } from '@material-ui/core';
+import AppBar from '@material-ui/core/AppBar';
+import { makeStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { Face } from '@material-ui/icons';
+import { me } from 'api/auth/queries';
+import React, { useState } from 'react';
+import { useQuery } from 'react-query';
+import { UserChip } from './UserChip';
 
 const useStyles = makeStyles({
   bar: {
@@ -29,15 +29,15 @@ const useStyles = makeStyles({
     color: 'white',
   },
   avatar: {},
-})
+});
 
 interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = (props) => {
-  const classes = useStyles()
-  const [loggedIn, setLoggedIn] = useState(false)
+  const classes = useStyles();
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  const { data: user, isLoading, error } = useQuery('me', me)
+  const { data: user, isLoading, error } = useQuery('me', me);
 
   return (
     <AppBar position="static">
@@ -68,7 +68,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
         </div>
       </Toolbar>
     </AppBar>
-  )
-}
+  );
+};
 
-export default NavBar
+export default NavBar;
