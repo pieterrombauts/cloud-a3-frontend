@@ -16,7 +16,8 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { DateTime } from 'luxon';
 import { Cancel, Favorite } from '@material-ui/icons';
-import { CORS_ANYWHERE } from 'api/contants';
+import { API_GATEWAY_URL, CORS_ANYWHERE } from 'api/contants';
+import { useLoginContext } from 'components/login/UserContext';
 
 const useStyles = makeStyles({
   container: {
@@ -70,6 +71,7 @@ const dateSort = (a: DateTime, b: DateTime) => {
 
 const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
   const classes = useStyles();
+  const { loggedIn } = useLoginContext();
   const [userLoc, setUserLoc] = useState<GeolocationPosition | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [radio, setRadio] = useState<SatDataType[]>([]);
@@ -136,6 +138,20 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
       setLoading(false);
     }
   }, [props.satellite.noradID]);
+
+  const handleFavourite = () => {
+    axios.post(`${API_GATEWAY_URL}/favouriteSatellite`,{
+      id: props.satellite.noradID,
+      name: props.satellite.name
+    }).then((res) => {
+      
+    })
+  }
+  
+  const handleUnfavourite = () => {
+    
+  }
+  
   return (
     <Card className={classes.container}>
       <CardContent>
@@ -145,17 +161,17 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
               className={classes.heading}
               variant="h6"
             >{`${props.satellite.name} [${props.satellite.noradID}]`}</Typography>
-            {props.satellite.favourite ? (
+            {loggedIn && (props.satellite.favourite ? (
               <Button variant="contained" disableElevation>
                 <Cancel fontSize="inherit" className={classes.icon} />
                 Unfavourite
               </Button>
             ) : (
-              <Button variant="contained" color="secondary" disableElevation>
+              <Button variant="contained" color="secondary" disableElevation onClick={handleFavourite}>
                 <Favorite fontSize="inherit" className={classes.icon} />
                 Favourite
               </Button>
-            )}
+            ))}
           </div>
         )}
         <TableContainer component={Paper}>

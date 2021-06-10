@@ -10,6 +10,8 @@ import TabPanel from '@material-ui/lab/TabPanel';
 import Tabs from '@material-ui/core/Tabs';
 import SatelliteGlobe from './SatelliteGlobe';
 import SatPassesTable from './SatPassesTable';
+import { useQuery } from 'react-query';
+import { me, User } from 'api/auth/queries';
 
 const useStyles = makeStyles({
   container: {
@@ -22,7 +24,14 @@ const useStyles = makeStyles({
 
 interface SatelliteDashProps {}
 
+interface SatOptionType {
+  favourite: boolean;
+  noradID: string;
+  name: string;
+}
+
 const SatelliteDash: React.FC<SatelliteDashProps> = (props) => {
+  const { data, error, isLoading } = useQuery<User>('me', me);
   const [selectedSat, setSelectedSat] = useState<{
     favourite: boolean;
     name: string;
@@ -32,6 +41,7 @@ const SatelliteDash: React.FC<SatelliteDashProps> = (props) => {
   const classes = useStyles();
   return (
     <Box className={classes.container}>
+      {console.log(data)}
       <Grid container spacing={2}>
         <Grid item xs={4} container direction="column">
           <SatSearchBar

@@ -56,7 +56,7 @@ function App() {
             <Route path={Paths.RESET_PASSWORD}>
               <ResetPassword />
             </Route>
-            <Route path={Paths.HOME}></Route>
+            <Route exact path={Paths.HOME}><SatelliteDash /></Route>
           </Router>
         </div>
       </QueryClientProvider>
