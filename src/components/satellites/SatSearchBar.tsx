@@ -44,7 +44,7 @@ interface SatOptionType {
 }
 
 interface SatSearchBarProps {
-  onSelect: (satellite: {name: string, noradID: string}) => void;
+  onSelect: (satellite: SatOptionType) => void;
 }
 
 const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
@@ -71,9 +71,10 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
     setLoading(true);
     axios.get(`https://cors-anywhere.herokuapp.com/https://celestrak.com/NORAD/elements/gp.php?NAME=${value}&FORMAT=JSON`).then((response) => {
       let options = response.data.map((result: SatResultType) => {
-        console.log(userFavs.find((el) => el.noradID === result.NORAD_CAT_ID.toString()));
+        let favStatus = userFavs.find((el) => el.noradID === result.NORAD_CAT_ID.toString()) !== undefined;
+        console.log(favStatus);
         return {
-          favourite: userFavs.find((el) => el.noradID === result.NORAD_CAT_ID.toString()) === undefined ? false : true,
+          favourite: favStatus,
           noradID: result.NORAD_CAT_ID.toString(),
           name: result.OBJECT_NAME,
         }
@@ -96,7 +97,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
 
   const handleSelectChange = (event: React.ChangeEvent<{}>, value: SatOptionType | null, reason: AutocompleteChangeReason) => {
     if (value === null) {
-      props.onSelect({name: "", noradID: ""});
+      props.onSelect({favourite: false, name: "", noradID: ""});
     } else {
       props.onSelect(value);
     }
@@ -116,7 +117,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
           loading={loading}
           renderOption={(option) => (
             <>
-              <Favorite fontSize="inherit" className={classes.icon}/>
+              {option.favourite && <Favorite fontSize="inherit" className={classes.icon}/>}
               {`${option.name} [${option.noradID}]`}
             </>
           )}

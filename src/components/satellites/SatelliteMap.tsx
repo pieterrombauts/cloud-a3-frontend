@@ -55,7 +55,7 @@ const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
   useEffect(() => {
     if (props.noradID !== "") {
       setLoading(true);
-      axios.get(`https://cors-anywhere.herokuapp.com/https://api.n2yo.com/rest/v1/satellite/positions/${props.noradID}/41.702/-76.014/0/12000/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`).then((response) => {
+      axios.get(`https://13.210.44.223/https://api.n2yo.com/rest/v1/satellite/positions/${props.noradID}/41.702/-76.014/0/12000/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`).then((response) => {
         let points = response.data.positions.map((point: PositionType) => ({
           lat: point.satlatitude,
           lng: point.satlongitude,

@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { DateTime } from 'luxon';
-import { Favorite } from '@material-ui/icons';
+import { Cancel, Favorite } from '@material-ui/icons';
 
 const useStyles = makeStyles({
   container: {
@@ -50,7 +50,7 @@ interface SatDataType {
 }
 
 interface SatPassesTableProps {
-  satellite: {name: string, noradID: string};
+  satellite: {favourite: boolean, name: string, noradID: string};
 }
 
 const dateSort = (a: DateTime, b: DateTime) => {
@@ -113,10 +113,17 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
         {props.satellite.noradID !== "" && 
           <div className={classes.head}>
             <Typography className={classes.heading} variant="h6">{`${props.satellite.name} [${props.satellite.noradID}]`}</Typography>
-            <Button variant="contained" color="secondary" disableElevation href="/weather">
-              <Favorite fontSize="inherit" className={classes.icon} />
-               Favourite
-            </Button>
+            {props.satellite.favourite ?
+              <Button variant="contained" disableElevation>
+                <Cancel fontSize="inherit" className={classes.icon} />
+                Unfavourite
+              </Button>
+              :
+              <Button variant="contained" color="secondary" disableElevation>
+                <Favorite fontSize="inherit" className={classes.icon} />
+                Favourite
+              </Button>
+            }
           </div>
         }
         <TableContainer component={Paper}>

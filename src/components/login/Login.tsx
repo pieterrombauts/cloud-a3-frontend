@@ -121,6 +121,22 @@ const Login: React.FC<LoginProps> = (props) => {
               >
                 {isSubmitting ? <CircularProgress size={24} /> : 'login'}
               </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Typography variant="subtitle1">
+                    <Link to="/forgotpassword">
+                      Forgot password?
+                    </Link>
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    <Link to="/register">
+                      Don't have an account? Sign Up
+                    </Link>
+                  </Typography>
+                </Grid>
+              </Grid>
             </Form>
           )}
         </Formik>

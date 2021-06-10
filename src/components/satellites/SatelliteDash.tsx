@@ -16,21 +16,21 @@ const useStyles = makeStyles({
     padding: "20px",
   },
   tabpanel: {
-    height: "90vh"
+    height: "80vh"
   }
 })
 
 interface SatelliteDashProps {}
 
 const SatelliteDash: React.FC<SatelliteDashProps> = (props) => {
-  const [selectedSat, setSelectedSat] = useState<{name: string, noradID: string}>({name: "", noradID: ""});
+  const [selectedSat, setSelectedSat] = useState<{favourite:boolean, name: string, noradID: string}>({favourite: false, name: "", noradID: ""});
   const [tab, setTab] = useState<string>("1");
   const classes = useStyles();
     return (
     <Box className={classes.container}>
       <Grid container spacing={2}>
         <Grid item xs={4} container direction='column'>
-            <SatSearchBar onSelect={(satellite: {name: string, noradID: string}) => setSelectedSat(satellite)} />
+            <SatSearchBar onSelect={(satellite: {favourite: boolean, name: string, noradID: string}) => setSelectedSat(satellite)} />
             <SatPassesTable satellite={selectedSat} />
         </Grid>
         <Grid item xs={8} container>

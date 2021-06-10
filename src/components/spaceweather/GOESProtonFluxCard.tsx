@@ -103,7 +103,7 @@ const GOESProtonFluxCard: React.FC<GOESProtonFluxCardProps> = (props) => {
             data: dataItems.filter((dataItem: any) => (dataItem.energy === ">=50 MeV")).map((dataItem: any) => (dataItem.flux)),
             backgroundColor: "rgb(0, 0, 255)",
             borderColor: "rgb(0, 0, 255)",
-            showLine: false,
+            showLine: true,
             pointRadius: 1,
             pointHoverRadius: 1,
             normalized: true,
