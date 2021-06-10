@@ -6,11 +6,6 @@ import PhotoCamera from '@material-ui/icons/PhotoCamera';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
     input: {
       display: 'none',
     },
@@ -21,7 +16,7 @@ export default function UploadButtons() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div>
       <input
         accept="image/*"
         className={classes.input}

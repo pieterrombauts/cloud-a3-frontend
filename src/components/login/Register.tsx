@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import { CircularProgress, emphasize, makeStyles } from '@material-ui/core';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
@@ -14,6 +14,7 @@ import { login, register } from 'api/auth/actions';
 import { TextField } from 'formik-material-ui';
 import { Alert } from '@material-ui/lab';
 import { Paths } from 'Paths';
+import { useLoginContext } from './UserContext';
 
 interface RegisterProps {}
 
@@ -45,7 +46,7 @@ const registerSchema = Yup.object().shape({
   lastName: Yup.string().min(2, 'Too short').required('Required'),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
-    .min(8, 'Password must be at least than 8 characters')
+    .min(8, 'Password must be at least 8 characters')
     .required('Required'),
 });
 
@@ -60,6 +61,7 @@ const Register: React.FC<RegisterProps> = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const [error, setError] = useState('');
+  const { loggedIn, setLoggedIn } = useLoginContext();
 
   const initialValues: RegisterForm = {
     firstName: '',
@@ -67,6 +69,10 @@ const Register: React.FC<RegisterProps> = (props) => {
     email: '',
     password: '',
   };
+
+  if (loggedIn) {
+    history.push(Paths.HOME);
+  }
 
   return (
     <Container component="main" maxWidth="sm">
@@ -92,6 +98,7 @@ const Register: React.FC<RegisterProps> = (props) => {
               });
               await login(email, values.password);
               setError('');
+              setLoggedIn(true);
               history.push(Paths.HOME);
             } catch (error) {
               setError(error.response.data.message);
