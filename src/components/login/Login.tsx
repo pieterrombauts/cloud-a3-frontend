@@ -15,6 +15,7 @@ import { Field, Form, Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { createFalse } from 'typescript'
 import { TextField } from 'formik-material-ui'
+import { Paths } from 'Paths'
 
 interface LoginProps {}
 
@@ -126,7 +127,7 @@ const Login: React.FC<LoginProps> = (props) => {
                 {isSubmitting ? <CircularProgress size={24} /> : 'login'}
               </Button>
               <Typography variant="subtitle1">
-                <Link to="/register">Don't have an account? Sign up</Link>
+                <Link to={Paths.REGISTER}>Don't have an account? Sign up</Link>
               </Typography>
             </Form>
           )}

@@ -5,12 +5,14 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
 import { CircularProgress, makeStyles } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import { TextField } from 'formik-material-ui'
+import { resetPassword } from 'api/auth/actions'
+import { Paths } from 'Paths'
 
 interface LoginProps {}
 
@@ -57,6 +59,14 @@ const ResetPassword: React.FC<LoginProps> = (props) => {
   const [error, setError] = useState('')
   const history = useHistory()
 
+  const search = useLocation().search
+  const token = new URLSearchParams(search).get('token')
+
+  if (!token) {
+    history.push(Paths.FORGOT_PASSWORD)
+    return <p>No token, redirecting to forgot password page...</p>
+  }
+
   const initialValues: ResetPasswordForm = {
     newPassword: '',
     confirmPassword: '',
@@ -71,22 +81,21 @@ const ResetPassword: React.FC<LoginProps> = (props) => {
         <Typography component="h1" variant="h5">
           Forgot Password
         </Typography>
-
         <Formik
           initialValues={initialValues}
           validationSchema={forgotPasswordSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            // login(values.email.trim().toLowerCase(), values.password)
-            //   .then(() => {
-            //     setError('')
-            //     history.push('/')
-            //   })
-            //   .catch((error) => {
-            //     if (error.response) {
-            //       setError(error.response.data.message)
-            //     }
-            //   })
-            //   .finally(() => setSubmitting(false))
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              await resetPassword(token, values.newPassword)
+              setError('')
+              history.push(Paths.HOME)
+            } catch (error) {
+              if (error.response) {
+                setError(error.response.data.message)
+              }
+            } finally {
+              setSubmitting(false)
+            }
           }}
         >
           {({ isSubmitting }) => (

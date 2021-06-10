@@ -11,6 +11,7 @@ import SatelliteDash from 'components/satellites/SatelliteDash'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import ForgotPassword from 'components/login/ForgotPassword'
 import ResetPassword from 'components/login/ResetPassword'
+import { Paths } from 'Paths'
 
 const useStyles = makeStyles({
   app: {},
@@ -26,28 +27,28 @@ function App() {
         <CssBaseline />
         <Router>
           <NavBar />
-          <Route path="/weather">
+          <Route path={Paths.WEATHER}>
             <SpaceWeatherDash />
           </Route>
-          <Route path="/satellites">
+          <Route path={Paths.SATELLITES}>
             <SatelliteDash />
           </Route>
-          <Route path="/register">
+          <Route path={Paths.REGISTER}>
             <Register />
           </Route>
-          <Route path="/profile">
+          <Route path={Paths.PROFILE}>
             <Profile />
           </Route>
-          <Route path="/login">
+          <Route path={Paths.LOGIN}>
             <Login />
           </Route>
-          <Route path="/forgot-password">
+          <Route path={Paths.FORGOT_PASSWORD}>
             <ForgotPassword />
           </Route>
-          <Route path="/reset-password">
+          <Route path={Paths.RESET_PASSWORD}>
             <ResetPassword />
           </Route>
-          <Route path="/"></Route>
+          <Route path={Paths.HOME}></Route>
         </Router>
       </div>
     </QueryClientProvider>

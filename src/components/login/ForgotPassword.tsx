@@ -15,6 +15,7 @@ import { Field, Form, Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { createFalse } from 'typescript'
 import { TextField } from 'formik-material-ui'
+import { Paths } from 'Paths'
 
 interface LoginProps {}
 
@@ -114,7 +115,7 @@ const Login: React.FC<LoginProps> = (props) => {
                 )}
               </Button>
               <Typography variant="subtitle1">
-                I remember now! <Link to="/login">Log in</Link>
+                I remember now! <Link to={Paths.LOGIN}>Log in</Link>
               </Typography>
             </Form>
           )}
