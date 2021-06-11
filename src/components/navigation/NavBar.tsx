@@ -4,9 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { Face } from '@material-ui/icons';
-import { me } from 'api/auth/queries';
+import { me, User } from 'api/auth/queries';
 import React, { useState } from 'react';
 import { useQuery } from 'react-query';
+import ProfileDialog from './ProfileDialog';
 import { UserChip } from './UserChip';
 
 const useStyles = makeStyles({
@@ -35,9 +36,8 @@ interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = (props) => {
   const classes = useStyles();
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  const { data: user, isLoading, error } = useQuery('me', me);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data, error, isLoading } = useQuery<User>('me', me);
 
   return (
     <AppBar position="static">
@@ -64,8 +64,9 @@ const NavBar: React.FC<NavBarProps> = (props) => {
           </Button>
         </div>
         <div className={classes.right}>
-          <UserChip />
+          <UserChip onClick={() => setDialogOpen(true)}/>
         </div>
+        <ProfileDialog userData={data} onClose={() => setDialogOpen(false)} open={dialogOpen} />
       </Toolbar>
     </AppBar>
   );

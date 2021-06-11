@@ -20,6 +20,7 @@ import { API_GATEWAY_URL, CORS_ANYWHERE } from 'api/contants';
 import { useLoginContext } from 'components/login/UserContext';
 import { SatOptionType } from 'api/auth/queries';
 import { useQueryClient } from 'react-query';
+import { withAuth } from 'api/auth/tokens';
 
 const useStyles = makeStyles({
   container: {
@@ -143,7 +144,7 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
   }, [props.satellite.id]);
 
   const handleFavourite = () => {
-    axios.post(`${API_GATEWAY_URL}/favouriteSatellite`,{
+    withAuth(axios).post(`${API_GATEWAY_URL}/favouriteSatellite`,{
       id: props.satellite.id,
       name: props.satellite.name
     }).then((res) => {
@@ -152,7 +153,7 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
   }
   
   const handleUnfavourite = () => {
-    axios.delete(`${API_GATEWAY_URL}/favouriteSatellite`, { data: {
+    withAuth(axios).delete(`${API_GATEWAY_URL}/favouriteSatellite`, { data: {
       id: props.satellite.id
     }}).then((res) => {
       queryClient.invalidateQueries("me");

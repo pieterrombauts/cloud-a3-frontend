@@ -41,9 +41,6 @@ function App() {
             <Route path={Paths.REGISTER}>
               <Register />
             </Route>
-            <Route path={Paths.PROFILE}>
-              <Profile />
-            </Route>
             <Route path={Paths.LOGIN}>
               <Login />
             </Route>

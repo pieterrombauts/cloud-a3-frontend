@@ -7,7 +7,9 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link as RouterLink } from 'react-router-dom';
 
-interface UserChipProps {}
+interface UserChipProps {
+  onClick: () => void;
+}
 
 const useStyles = makeStyles({
   bar: {
@@ -31,8 +33,7 @@ const useStyles = makeStyles({
   avatar: {},
 });
 
-export const UserChip: React.FC<UserChipProps> = ({}) => {
-  // isLoggedIn()
+export const UserChip: React.FC<UserChipProps> = ( props ) => {
   const classes = useStyles();
   const { loggedIn } = useLoginContext();
   const {
@@ -72,6 +73,7 @@ export const UserChip: React.FC<UserChipProps> = ({}) => {
         avatar={<Avatar src={user.avatar} />}
         label={`${user?.firstName} ${user?.lastName}`}
         variant="outlined"
+        onClick={props.onClick}
       />
       <Button
         variant="contained"
