@@ -7,7 +7,7 @@ import Autocomplete, {
 } from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Search from '@material-ui/icons/Search';
+import { SatOptionType } from 'api/auth/queries';
 import axios from 'axios';
 import { throttle, debounce } from 'throttle-debounce';
 import { Favorite } from '@material-ui/icons';
@@ -41,13 +41,8 @@ interface SatResultType {
   MEAN_MOTION_DDOT: number;
 }
 
-interface SatOptionType {
-  favourite: boolean;
-  noradID: string;
-  name: string;
-}
-
 interface SatSearchBarProps {
+  favourites: SatOptionType[] | undefined;
   onSelect: (satellite: SatOptionType) => void;
 }
 
@@ -59,21 +54,32 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
   const [options, setOptions] = useState<SatOptionType[]>([]);
 
   useEffect(() => {
-    setTimeout(() => {
-      let userFavOptions: SatOptionType[] = [
-        { name: 'UME (ISS)', noradID: '8709' },
-        { name: 'ISS (ZARYA)', noradID: '25544' },
-        { name: 'ISS DEB', noradID: '44306' },
-        { name: 'ISS DEB [COLKA COVER]', noradID: '47513' },
-      ].map((el) => ({
+    if (props.favourites) {
+      let userFavOptions = props.favourites.map((sat) => ({
         favourite: true,
-        name: el.name,
-        noradID: el.noradID,
+        name: sat.name,
+        id: sat.id
       }));
       setUserFavs(userFavOptions);
-      setOptions(userFavOptions);
-    }, 1000);
-  }, []);
+      if (inputText.length === 0) setOptions(userFavOptions);
+      else {
+        let newOptions = options.map((option) => ({
+          favourite: userFavOptions.find(
+            (el) => el.id === option.id,
+          ) === undefined
+            ? false
+            : true,
+          name: option.name,
+          id: option.id,
+        }))
+        console.log(newOptions);
+        setOptions(newOptions);
+      }
+    } else {
+      setUserFavs([]);
+      if (inputText.length === 0) setOptions([]);
+    }
+  }, [props.favourites]);
 
   const throttleFunc = throttle(2000, async (value: string) => {
     setLoading(true);
@@ -82,24 +88,23 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
         `${CORS_ANYWHERE}/https://celestrak.com/NORAD/elements/gp.php?NAME=${value}&FORMAT=JSON`,
       )
       .then((response) => {
-        let options = response.data.map((result: SatResultType) => {
-          console.log(
-            userFavs.find(
-              (el) => el.noradID === result.NORAD_CAT_ID.toString(),
-            ),
-          );
-          return {
-            favourite:
-              userFavs.find(
-                (el) => el.noradID === result.NORAD_CAT_ID.toString(),
-              ) === undefined
-                ? false
-                : true,
-            noradID: result.NORAD_CAT_ID.toString(),
-            name: result.OBJECT_NAME,
-          };
-        });
-        setOptions(options);
+        if (Array.isArray(response.data)) {
+          let options = response.data.map((result: SatResultType) => {
+            return {
+              favourite:
+                userFavs.find(
+                  (el) => el.id === result.NORAD_CAT_ID.toString(),
+                ) === undefined
+                  ? false
+                  : true,
+              id: result.NORAD_CAT_ID.toString(),
+              name: result.OBJECT_NAME,
+            };
+          });
+          setOptions(options); 
+        } else {
+          setOptions([]);
+        }
         setLoading(false);
       });
   });
@@ -125,7 +130,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
     reason: AutocompleteChangeReason,
   ) => {
     if (value === null) {
-      props.onSelect({ favourite: false, name: '', noradID: '' });
+      props.onSelect({ favourite: false, name: '', id: '' });
     } else {
       props.onSelect(value);
     }
@@ -142,7 +147,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
           options={options}
           getOptionLabel={(option) => option.name}
           getOptionSelected={(option, value) =>
-            option.noradID === value.noradID
+            option.id === value.id
           }
           loading={loading}
           renderOption={(option) => (
@@ -150,7 +155,7 @@ const SatSearchBar: React.FC<SatSearchBarProps> = (props) => {
               {option.favourite && (
                 <Favorite fontSize="inherit" className={classes.icon} />
               )}
-              {`${option.name} [${option.noradID}]`}
+              {`${option.name} [${option.id}]`}
             </>
           )}
           renderInput={(params) => (

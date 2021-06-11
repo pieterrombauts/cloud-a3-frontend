@@ -2,11 +2,18 @@ import { API_GATEWAY_URL, CORS_ANYWHERE } from 'api/contants';
 import axios from 'axios';
 import { withAuth } from './tokens';
 
+export interface SatOptionType {
+  favourite?: boolean;
+  id: string;
+  name: string;
+}
+
 export interface User {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
+  favSatellites: SatOptionType[];
 }
 
 export async function me() {

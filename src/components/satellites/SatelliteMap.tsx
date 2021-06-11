@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 interface SatelliteMapProps {
-  noradID: string;
+  id: string;
   visible: boolean;
 }
 
@@ -59,11 +59,11 @@ const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (props.noradID !== '') {
+    if (props.id !== '') {
       setLoading(true);
       axios
         .get(
-          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/positions/${props.noradID}/41.702/-76.014/0/12000/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
+          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/positions/${props.id}/41.702/-76.014/0/12000/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
         )
         .then((response) => {
           let points = response.data.positions.map((point: PositionType) => ({
@@ -74,7 +74,7 @@ const SatelliteMap: React.FC<SatelliteMapProps> = (props) => {
           setPoints(points);
         });
     }
-  }, [props.noradID]);
+  }, [props.id]);
 
   return (
     <div

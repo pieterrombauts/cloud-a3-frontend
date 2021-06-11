@@ -13,7 +13,7 @@ const useStyles = makeStyles({
 });
 
 interface SatelliteGlobeProps {
-  noradID: string;
+  id: string;
   visible: boolean;
 }
 
@@ -23,7 +23,7 @@ const SatelliteGlobe: React.FC<SatelliteGlobeProps> = (props) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    if (props.noradID !== '') {
+    if (props.id !== '') {
       setLoading(true);
       let startTime = DateTime.utc().toFormat('yyyy-MM-dd_HH:mm:ss');
       let endTime = DateTime.utc()
@@ -31,7 +31,7 @@ const SatelliteGlobe: React.FC<SatelliteGlobeProps> = (props) => {
         .toFormat('yyyy-MM-dd_HH:mm:ss');
       axios
         .get(
-          `${CORS_ANYWHERE}/http://www.orbitalpredictor.com/api/predict_orbit/?sats=${props.noradID}&start=${startTime}&end=${endTime}&format=czml&type=orbit`,
+          `${CORS_ANYWHERE}/http://www.orbitalpredictor.com/api/predict_orbit/?sats=${props.id}&start=${startTime}&end=${endTime}&format=czml&type=orbit`,
         )
         .then((response) => {
           let czml = response.data;
@@ -39,7 +39,7 @@ const SatelliteGlobe: React.FC<SatelliteGlobeProps> = (props) => {
           setCzml(czml);
         });
     }
-  }, [props.noradID]);
+  }, [props.id]);
 
   return (
     <div

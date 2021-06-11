@@ -18,6 +18,8 @@ import { DateTime } from 'luxon';
 import { Cancel, Favorite } from '@material-ui/icons';
 import { API_GATEWAY_URL, CORS_ANYWHERE } from 'api/contants';
 import { useLoginContext } from 'components/login/UserContext';
+import { SatOptionType } from 'api/auth/queries';
+import { useQueryClient } from 'react-query';
 
 const useStyles = makeStyles({
   container: {
@@ -60,7 +62,7 @@ interface SatDataType {
 }
 
 interface SatPassesTableProps {
-  satellite: { favourite: boolean; name: string; noradID: string };
+  satellite: SatOptionType;
 }
 
 const dateSort = (a: DateTime, b: DateTime) => {
@@ -71,6 +73,7 @@ const dateSort = (a: DateTime, b: DateTime) => {
 
 const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
   const classes = useStyles();
+  const queryClient = useQueryClient();
   const { loggedIn } = useLoginContext();
   const [userLoc, setUserLoc] = useState<GeolocationPosition | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -95,7 +98,7 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
       setLoading(true);
       axios
         .get(
-          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/radiopasses/${props.satellite.noradID}/${lat}/${lng}/0/7/60/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
+          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/radiopasses/${props.satellite.id}/${lat}/${lng}/0/7/60/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
         )
         .then((response) => {
           if (
@@ -116,7 +119,7 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
         });
       axios
         .get(
-          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/visualpasses/${props.satellite.noradID}/${lat}/${lng}/0/7/60/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
+          `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/visualpasses/${props.satellite.id}/${lat}/${lng}/0/7/60/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
         )
         .then((response) => {
           if (
@@ -137,32 +140,36 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
         });
       setLoading(false);
     }
-  }, [props.satellite.noradID]);
+  }, [props.satellite.id]);
 
   const handleFavourite = () => {
     axios.post(`${API_GATEWAY_URL}/favouriteSatellite`,{
-      id: props.satellite.noradID,
+      id: props.satellite.id,
       name: props.satellite.name
     }).then((res) => {
-      
+      queryClient.invalidateQueries("me");
     })
   }
   
   const handleUnfavourite = () => {
-    
+    axios.delete(`${API_GATEWAY_URL}/favouriteSatellite`, { data: {
+      id: props.satellite.id
+    }}).then((res) => {
+      queryClient.invalidateQueries("me");
+    })
   }
   
   return (
     <Card className={classes.container}>
       <CardContent>
-        {props.satellite.noradID !== '' && (
+        {props.satellite.id !== '' && (
           <div className={classes.head}>
             <Typography
               className={classes.heading}
               variant="h6"
-            >{`${props.satellite.name} [${props.satellite.noradID}]`}</Typography>
+            >{`${props.satellite.name} [${props.satellite.id}]`}</Typography>
             {loggedIn && (props.satellite.favourite ? (
-              <Button variant="contained" disableElevation>
+              <Button variant="contained" disableElevation onClick={handleUnfavourite}>
                 <Cancel fontSize="inherit" className={classes.icon} />
                 Unfavourite
               </Button>
@@ -188,7 +195,6 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
             <TableBody>
               {rows.map((row: SatDataType) => (
                 <TableRow>
-                  {console.log(row)}
                   <TableCell component="th" scope="row">
                     {row.type}
                   </TableCell>
@@ -202,14 +208,14 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
                   <TableCell>{row.totalTime + ' s'}</TableCell>
                 </TableRow>
               ))}
-              {rows.length === 0 && props.satellite.noradID !== '' && (
+              {rows.length === 0 && props.satellite.id !== '' && (
                 <TableRow>
                   <TableCell colSpan={5}>
                     There are no passes in the next week for this satellite.
                   </TableCell>
                 </TableRow>
               )}
-              {props.satellite.noradID === '' && (
+              {props.satellite.id === '' && (
                 <TableRow>
                   <TableCell colSpan={5}>
                     Search for a satellite to see results

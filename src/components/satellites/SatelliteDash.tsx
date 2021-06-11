@@ -11,7 +11,7 @@ import Tabs from '@material-ui/core/Tabs';
 import SatelliteGlobe from './SatelliteGlobe';
 import SatPassesTable from './SatPassesTable';
 import { useQuery } from 'react-query';
-import { me, User } from 'api/auth/queries';
+import { me, SatOptionType, User } from 'api/auth/queries';
 
 const useStyles = makeStyles({
   container: {
@@ -24,34 +24,41 @@ const useStyles = makeStyles({
 
 interface SatelliteDashProps {}
 
-interface SatOptionType {
-  favourite: boolean;
-  noradID: string;
-  name: string;
-}
-
 const SatelliteDash: React.FC<SatelliteDashProps> = (props) => {
   const { data, error, isLoading } = useQuery<User>('me', me);
-  const [selectedSat, setSelectedSat] = useState<{
-    favourite: boolean;
-    name: string;
-    noradID: string;
-  }>({ favourite: false, name: '', noradID: '' });
+  const [selectedSat, setSelectedSat] = useState<SatOptionType>({ favourite: false, name: '', id: '' });
   const [tab, setTab] = useState<string>('1');
   const classes = useStyles();
+
+  useEffect(() => {
+    if (data?.favSatellites && !isLoading && !error) {
+      if (selectedSat.id !== "") {
+        let updatedSelectedSat = {
+          favourite: data.favSatellites.find(
+            (el) => el.id === selectedSat.id,
+          ) === undefined
+            ? false
+            : true,
+          name: selectedSat.name,
+          id: selectedSat.id,
+        };
+        setSelectedSat(updatedSelectedSat);
+      }
+    }
+  }, [data])
+
   return (
     <Box className={classes.container}>
       {console.log(data)}
       <Grid container spacing={2}>
         <Grid item xs={4} container direction="column">
           <SatSearchBar
-            onSelect={(satellite: {
-              favourite: boolean;
-              name: string;
-              noradID: string;
-            }) => setSelectedSat(satellite)}
+            favourites={data?.favSatellites}
+            onSelect={(satellite: SatOptionType) => setSelectedSat(satellite)}
           />
-          <SatPassesTable satellite={selectedSat} />
+          <SatPassesTable 
+            satellite={selectedSat}
+          />
         </Grid>
         <Grid item xs={8} container>
           <Grid item xs={12}>
@@ -66,11 +73,11 @@ const SatelliteDash: React.FC<SatelliteDashProps> = (props) => {
                 <Tab label="3D Visualisation" value="2" />
               </Tabs>
               <SatelliteMap
-                noradID={selectedSat.noradID}
+                id={selectedSat.id}
                 visible={tab === '1'}
               />
               <SatelliteGlobe
-                noradID={selectedSat.noradID}
+                id={selectedSat.id}
                 visible={tab === '2'}
               />
             </Paper>
