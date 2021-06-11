@@ -44,32 +44,32 @@ export const UserChip: React.FC<UserChipProps> = ({}) => {
   if (!loggedIn || isLoading || !user || error) {
     return (
       <>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.btn}
-        disableElevation
-        href={Paths.LOGIN}
-      >
-        Login
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.btn}
-        disableElevation
-        href={Paths.REGISTER}
-      >
-        Register
-      </Button>
-    </>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.btn}
+          disableElevation
+          href={Paths.LOGIN}
+        >
+          Login
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.btn}
+          disableElevation
+          href={Paths.REGISTER}
+        >
+          Register
+        </Button>
+      </>
     );
   }
   return (
     <>
       <Chip
         className={classes.user}
-        avatar={<Avatar />}
+        avatar={<Avatar src={user.avatar} />}
         label={`${user?.firstName} ${user?.lastName}`}
         variant="outlined"
       />

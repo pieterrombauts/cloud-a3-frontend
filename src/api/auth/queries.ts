@@ -7,6 +7,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
+  avatar: string;
 }
 
 export async function me() {

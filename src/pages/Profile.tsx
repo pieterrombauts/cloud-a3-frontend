@@ -2,6 +2,7 @@ import { Box, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import { me } from 'api/auth/queries';
 import { User } from 'api/auth/queries';
+import { AvatarUpload } from 'components/profile/AvatarUpload';
 import React from 'react';
 import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
@@ -51,18 +52,7 @@ const Profile: React.FC<LoginProps> = (props) => {
         <Grid item>
           <Paper>
             <Box padding={2}>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
-              <Typography variant="h4">
-                {data.firstName} {data.lastName}
-              </Typography>
-              <Typography variant="h6">{data.email}</Typography>
-            </Box>
-          </Paper>
-        </Grid>
-        <Grid item>
-          <Paper>
-            <Box padding={2}>
-              <pre>{JSON.stringify(data, null, 2)}</pre>
+              <AvatarUpload src={data.avatar} />
               <Typography variant="h4">
                 {data.firstName} {data.lastName}
               </Typography>
