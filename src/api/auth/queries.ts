@@ -14,6 +14,7 @@ export interface User {
   lastName: string;
   email: string;
   favSatellites: SatOptionType[];
+  avatar: string;
 }
 
 export async function me() {
