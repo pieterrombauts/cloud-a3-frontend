@@ -93,10 +93,13 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
     setRows(combined);
   }, [radio, visual]);
   useEffect(() => {
+    let lat = "-37.813";
+    let lng = "144.963";
     if (userLoc !== null) {
-      let lat = userLoc.coords.latitude.toFixed(3);
-      let lng = userLoc.coords.longitude.toFixed(3);
-      setLoading(true);
+      lat = userLoc.coords.latitude.toFixed(3);
+      lng = userLoc.coords.longitude.toFixed(3);
+    }
+    setLoading(true);
       axios
         .get(
           `${CORS_ANYWHERE}/https://api.n2yo.com/rest/v1/satellite/radiopasses/${props.satellite.id}/${lat}/${lng}/0/7/60/&apiKey=86G9FS-PZTG9E-AH6DUE-4Q1M`,
@@ -140,7 +143,6 @@ const SatPassesTable: React.FC<SatPassesTableProps> = (props) => {
           }
         });
       setLoading(false);
-    }
   }, [props.satellite.id]);
 
   const handleFavourite = () => {
